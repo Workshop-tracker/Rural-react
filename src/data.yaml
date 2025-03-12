@@ -1,0 +1,115 @@
+const workshopData = [
+  {
+    workshopName: "Fidato Car Services pvt ltd. (NCR)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "NCR Wheels Noida Extention (NCR)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "R K Big Toy Automotive Private Limited (NCR)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "SNA Automobile (NCR)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "EZ Drive Car Care (Hyderabad)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Marvel Automobiles (Hyderabad)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Round the clock car scan station (Hyderabad)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "V Auto Care (Hyderabad)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Car Tech Services (Pune)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Lucky's Hi-tech Car Service (Pune)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Panchang Auto Industries (Pune)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  },
+  {
+    workshopName: "Trinity Auto Industries (Pune)",
+    offerKpiPairs: [
+      { offer: "Demand Gen- Digital", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Demand Gen – Partnerships: Uber", value: "Yes", kpi: "30-40 pre-qualified leads per workshop/month" },
+      { offer: "Access to Spare parts", value: "Yes", kpi: "" },
+      { offer: "WMS", value: "Yes", kpi: "50% of Job cards to be created in WMS" },
+      { offer: "Used Car buy & sell", value: "Yes", kpi: "Creating a new revenue stream for workshops" }
+    ]
+  }
+];

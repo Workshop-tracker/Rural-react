@@ -1,0 +1,290 @@
+import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
+import './App.css';
+
+const App = () => {
+  const [mainData, setMainData] = useState([]);
+  const [highlightedRows, setHighlightedRows] = useState([]);
+  const [highlightedCities, setHighlightedCities] = useState(new Set());
+  const [subdistrictsData, setSubdistrictsData] = useState([]);
+  const [filters, setFilters] = useState({});
+  const [activeTab, setActiveTab] = useState('main'); // Manage active tabs (Main / Subdistricts)
+  const [highlightedCitiesCount, setHighlightedCitiesCount] = useState(0); // To track the count of highlighted cities
+
+  // Handle Main File Upload
+  const handleMainFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const binaryString = event.target.result;
+      const workbook = XLSX.read(binaryString, { type: 'binary' });
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      setMainData(data);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  // Handle Subdistricts File Upload
+  const handleSubdistrictFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const binaryString = event.target.result;
+      const workbook = XLSX.read(binaryString, { type: 'binary' });
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      const headers = data[0];
+      if (!headers.includes('City') || !headers.includes('Subdistrict') || !headers.includes('Population')) {
+        alert('Invalid subdistricts file format. Required columns: City, Subdistrict, Population.');
+        return;
+      }
+
+      setSubdistrictsData(data);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  // Handle Filter Changes
+  const handleFilterChange = (filterKey, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterKey]: value,
+    }));
+  };
+
+  // Apply Filters to Highlight Rows and Calculate Count
+  const applyFilters = () => {
+    if (!mainData.length) {
+      alert('Please upload the main data file first!');
+      return;
+    }
+
+    const { col1, cond1, col2, cond2, col3, cond3 } = filters;
+    const headers = mainData[0];
+    const newHighlightedRows = [];
+    const newHighlightedCities = new Set();
+
+    for (let i = 1; i < mainData.length; i++) {
+      const row = mainData[i];
+      let meetsCondition = true;
+
+      if (cond1 && !checkCondition(row[headers.indexOf(col1)], cond1)) meetsCondition = false;
+      if (cond2 && !checkCondition(row[headers.indexOf(col2)], cond2)) meetsCondition = false;
+      if (cond3 && !checkCondition(row[headers.indexOf(col3)], cond3)) meetsCondition = false;
+
+      if (meetsCondition) {
+        newHighlightedRows.push(i);
+        newHighlightedCities.add(row[headers.indexOf('City')]);
+      }
+    }
+
+    setHighlightedRows(newHighlightedRows);
+    setHighlightedCities(newHighlightedCities);
+    setHighlightedCitiesCount(newHighlightedCities.size); // Update the count of highlighted cities
+  };
+
+  const checkCondition = (value, condition) => {
+    if (!value) return false;
+    if (condition.startsWith('>')) return parseFloat(value) > parseFloat(condition.slice(1));
+    if (condition.startsWith('<')) return parseFloat(value) < parseFloat(condition.slice(1));
+    if (condition.startsWith('=')) return value === condition.slice(1);
+    return false;
+  };
+
+  // Export Highlighted Rows to Excel
+  const exportToExcel = () => {
+    const headers = mainData[0];
+    const highlightedData = [headers, ...highlightedRows.map((idx) => mainData[idx])];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(highlightedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Highlighted Data');
+
+    XLSX.writeFile(workbook, 'highlighted_data.xlsx');
+  };
+
+  // Export Only Displayed Subdistricts Data to Excel
+  const exportSubdistrictsToExcel = () => {
+    const headers = subdistrictsData[0];
+    const subdistrictsDataToExport = [headers];
+
+    // Filter subdistricts based on highlighted cities
+    subdistrictsData.slice(1).forEach((row) => {
+      if (highlightedCities.has(row[headers.indexOf('City')])) {
+        subdistrictsDataToExport.push(row);
+      }
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet(subdistrictsDataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Subdistricts Data');
+
+    XLSX.writeFile(workbook, 'subdistricts_data.xlsx');
+  };
+
+  // Render Subdistricts Table
+  const renderSubdistricts = () => {
+    if (!subdistrictsData.length) {
+      return (
+        <tr>
+          <td colSpan="3">No subdistricts data available. Please upload a valid file.</td>
+        </tr>
+      );
+    }
+
+    const headers = subdistrictsData[0];
+    const cityIndex = headers.indexOf('City');
+    const subdistrictIndex = headers.indexOf('Subdistrict');
+    const populationIndex = headers.indexOf('Population');
+
+    return subdistrictsData.slice(1).map((row, idx) => {
+      if (highlightedCities.has(row[cityIndex])) {
+        return (
+          <tr key={idx}>
+            <td>{row[cityIndex]}</td>
+            <td>{row[subdistrictIndex]}</td>
+            <td>{row[populationIndex]}</td>
+          </tr>
+        );
+      }
+      return null;
+    });
+  };
+
+  return (
+    <div className="App">
+      <header>
+        <h1>Potential Districts for Expansion</h1>
+      </header>
+
+      <nav>
+        <button onClick={() => setActiveTab('main')}>Main Data</button>
+        <button onClick={() => setActiveTab('subdistricts')}>Subdistricts Data</button>
+      </nav>
+
+      {activeTab === 'main' && (
+        <main>
+          <div className="filters-container">
+            <div className="filter-card">
+              <h2>Main Data File</h2>
+              <input type="file" onChange={handleMainFileUpload} />
+            </div>
+
+            <div className="filter-card">
+              <h2>Filter Conditions</h2>
+              <label>Column 1:</label>
+              <select onChange={(e) => handleFilterChange('col1', e.target.value)}>
+                <option value="">Select Column</option>
+                {mainData[0] && mainData[0].map((col, idx) => <option key={idx} value={col}>{col}</option>)}
+              </select>
+              <input
+                type="text"
+                placeholder="Condition (e.g., >10)"
+                onChange={(e) => handleFilterChange('cond1', e.target.value)}
+              />
+
+              <label>Column 2:</label>
+              <select onChange={(e) => handleFilterChange('col2', e.target.value)}>
+                <option value="">Select Column</option>
+                {mainData[0] && mainData[0].map((col, idx) => <option key={idx} value={col}>{col}</option>)}
+              </select>
+              <input
+                type="text"
+                placeholder="Condition (e.g., =Yes)"
+                onChange={(e) => handleFilterChange('cond2', e.target.value)}
+              />
+
+              <label>Column 3:</label>
+              <select onChange={(e) => handleFilterChange('col3', e.target.value)}>
+                <option value="">Select Column</option>
+                {mainData[0] && mainData[0].map((col, idx) => <option key={idx} value={col}>{col}</option>)}
+              </select>
+              <input
+                type="text"
+                placeholder="Condition (e.g., <50)"
+                onChange={(e) => handleFilterChange('cond3', e.target.value)}
+              />
+            </div>
+
+            <div className="action-buttons">
+              <button onClick={applyFilters}>Apply Filters</button>
+              {highlightedRows.length > 0 && <button onClick={exportToExcel}>Export as XLSX</button>}
+            </div>
+          </div>
+
+          <div className="table-container">
+            <h2>Main Data</h2>
+            <table>
+              <thead>
+                <tr>
+                  {mainData[0] && mainData[0].map((header, idx) => <th key={idx}>{header}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {mainData.slice(1).map((row, idx) => {
+                  const isHighlighted = highlightedRows.includes(idx + 1);
+                  return (
+                    <tr key={idx} className={isHighlighted ? 'highlight' : ''}>
+                      {row.map((cell, cellIdx) => (
+                        <td key={cellIdx}>{cell}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Display Count of Highlighted Cities */}
+          <div id="highlightCount">
+            Highlighted Cities: {highlightedCitiesCount}
+          </div>
+        </main>
+      )}
+
+      {activeTab === 'subdistricts' && (
+        <main>
+          <div className="filters-container">
+            <div className="filter-card">
+              <h2>Subdistricts File</h2>
+              <input type="file" onChange={handleSubdistrictFileUpload} />
+            </div>
+          </div>
+
+          <div className="table-container">
+            <h2>Subdistricts for Highlighted Cities</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>City</th>
+                  <th>Subdistrict</th>
+                  <th>Population</th>
+                </tr>
+              </thead>
+              <tbody>{renderSubdistricts()}</tbody>
+            </table>
+
+            {/* Export Button for Subdistricts */}
+            {subdistrictsData.length > 0 && (
+              <button id="exportSubdistrictsBtn" onClick={exportSubdistrictsToExcel}>
+                Export Subdistricts as XLSX
+              </button>
+            )}
+          </div>
+        </main>
+      )}
+    </div>
+  );
+};
+
+export default App;
+
+
