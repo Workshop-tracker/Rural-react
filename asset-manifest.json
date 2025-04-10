@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/Rural-react/static/css/main.b37b79f2.css",
-    "main.js": "/Rural-react/static/js/main.5ed24dd4.js",
-    "index.html": "/Rural-react/index.html",
-    "main.b37b79f2.css.map": "/Rural-react/static/css/main.b37b79f2.css.map",
-    "main.5ed24dd4.js.map": "/Rural-react/static/js/main.5ed24dd4.js.map"
+    "main.css": "/Workshop-data/static/css/main.b37b79f2.css",
+    "main.js": "/Workshop-data/static/js/main.5ed24dd4.js",
+    "index.html": "/Workshop-data/index.html",
+    "main.b37b79f2.css.map": "/Workshop-data/static/css/main.b37b79f2.css.map",
+    "main.5ed24dd4.js.map": "/Workshop-data/static/js/main.5ed24dd4.js.map"
   },
   "entrypoints": [
     "static/css/main.b37b79f2.css",
